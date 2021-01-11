@@ -1,121 +1,129 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
-namespace VasekPurchart\TracyBlueScreenBundle\DependencyInjection;
+namespace Cdn77\TracyBlueScreenBundle\DependencyInjection;
 
+use Cdn77\TracyBlueScreenBundle\DependencyInjection\Exception\TwigBundleRequired;
+use Cdn77\TracyBlueScreenBundle\TracyBlueScreenBundle;
 use ReflectionClass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use VasekPurchart\TracyBlueScreenBundle\TracyBlueScreenBundle;
+use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
-class TracyBlueScreenExtension
-	extends \Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension
-	implements \Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface
+use function assert;
+use function dirname;
+
+//phpcs:disable SlevomatCodingStandard.Files.LineLength.LineTooLong
+final class TracyBlueScreenExtension extends ConfigurableExtension implements PrependExtensionInterface
 {
+    public const CONTAINER_PARAMETER_BLUE_SCREEN_COLLAPSE_PATHS = 'cdn77.tracy_blue_screen.blue_screen.collapse_paths';
+    public const CONTAINER_PARAMETER_CONSOLE_BROWSER = 'cdn77.tracy_blue_screen.console.browser';
+    public const CONTAINER_PARAMETER_CONSOLE_LISTENER_PRIORITY = 'cdn77.tracy_blue_screen.console.listener_priority';
+    public const CONTAINER_PARAMETER_CONSOLE_LOG_DIRECTORY = 'cdn77.tracy_blue_screen.console.log_directory';
+    public const CONTAINER_PARAMETER_CONTROLLER_LISTENER_PRIORITY = 'cdn77.tracy_blue_screen.controller.listener_priority';
+    private const TWIG_BUNDLE_ALIAS = 'twig';
+    private const TWIG_TEMPLATES_NAMESPACE = 'Twig';
 
-	public const CONTAINER_PARAMETER_BLUE_SCREEN_COLLAPSE_PATHS = 'vasek_purchart.tracy_blue_screen.blue_screen.collapse_paths';
-	public const CONTAINER_PARAMETER_CONSOLE_BROWSER = 'vasek_purchart.tracy_blue_screen.console.browser';
-	public const CONTAINER_PARAMETER_CONSOLE_LISTENER_PRIORITY = 'vasek_purchart.tracy_blue_screen.console.listener_priority';
-	public const CONTAINER_PARAMETER_CONSOLE_LOG_DIRECTORY = 'vasek_purchart.tracy_blue_screen.console.log_directory';
-	public const CONTAINER_PARAMETER_CONTROLLER_LISTENER_PRIORITY = 'vasek_purchart.tracy_blue_screen.controller.listener_priority';
+    public function prepend(ContainerBuilder $container) : void
+    {
+        if (! $container->hasExtension(self::TWIG_BUNDLE_ALIAS)) {
+            throw new TwigBundleRequired();
+        }
 
-	private const TWIG_BUNDLE_ALIAS = 'twig';
-	private const TWIG_TEMPLATES_NAMESPACE = 'Twig';
+        $container->loadFromExtension(
+            self::TWIG_BUNDLE_ALIAS,
+            [
+                'paths' => [
+                    $this->getTemplatesDirectory() => self::TWIG_TEMPLATES_NAMESPACE,
+                ],
+            ]
+        );
+    }
 
-	public function prepend(ContainerBuilder $container): void
-	{
-		if (!$container->hasExtension(self::TWIG_BUNDLE_ALIAS)) {
-			throw new \VasekPurchart\TracyBlueScreenBundle\DependencyInjection\TwigBundleRequiredException();
-		}
+    /** @param mixed[] $mergedConfig */
+    public function loadInternal(array $mergedConfig, ContainerBuilder $container) : void
+    {
+        $container->setParameter(
+            self::CONTAINER_PARAMETER_BLUE_SCREEN_COLLAPSE_PATHS,
+            $mergedConfig[Configuration::SECTION_BLUE_SCREEN][Configuration::PARAMETER_COLLAPSE_PATHS]
+        );
+        $container->setParameter(
+            self::CONTAINER_PARAMETER_CONSOLE_BROWSER,
+            $mergedConfig[Configuration::SECTION_CONSOLE][Configuration::PARAMETER_CONSOLE_BROWSER]
+        );
+        $container->setParameter(
+            self::CONTAINER_PARAMETER_CONSOLE_LISTENER_PRIORITY,
+            $mergedConfig[Configuration::SECTION_CONSOLE][Configuration::PARAMETER_CONSOLE_LISTENER_PRIORITY]
+        );
+        $container->setParameter(
+            self::CONTAINER_PARAMETER_CONSOLE_LOG_DIRECTORY,
+            $mergedConfig[Configuration::SECTION_CONSOLE][Configuration::PARAMETER_CONSOLE_LOG_DIRECTORY]
+        );
+        $container->setParameter(
+            self::CONTAINER_PARAMETER_CONTROLLER_LISTENER_PRIORITY,
+            $mergedConfig[Configuration::SECTION_CONTROLLER][Configuration::PARAMETER_CONTROLLER_LISTENER_PRIORITY]
+        );
 
-		$container->loadFromExtension(self::TWIG_BUNDLE_ALIAS, [
-			'paths' => [
-				$this->getTemplatesDirectory() => self::TWIG_TEMPLATES_NAMESPACE,
-			],
-		]);
-	}
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/config'));
+        $loader->load('services.yml');
 
-	private function getTemplatesDirectory(): string
-	{
-		$bundleClassReflection = new ReflectionClass(TracyBlueScreenBundle::class);
-		$srcDirectoryPath = dirname($bundleClassReflection->getFileName());
+        $environment = $container->getParameter('kernel.environment');
+        $debug = $container->getParameter('kernel.debug');
 
-		return $srcDirectoryPath . '/Resources/views';
-	}
+        if (
+            $this->isEnabled(
+                $mergedConfig[Configuration::SECTION_CONSOLE][Configuration::PARAMETER_CONSOLE_ENABLED],
+                $environment,
+                $debug
+            )
+        ) {
+            $loader->load('console_listener.yml');
+        }
 
-	/**
-	 * @param mixed[] $mergedConfig
-	 * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
-	 */
-	public function loadInternal(array $mergedConfig, ContainerBuilder $container): void
-	{
-		$container->setParameter(
-			self::CONTAINER_PARAMETER_BLUE_SCREEN_COLLAPSE_PATHS,
-			$mergedConfig[Configuration::SECTION_BLUE_SCREEN][Configuration::PARAMETER_COLLAPSE_PATHS]
-		);
-		$container->setParameter(
-			self::CONTAINER_PARAMETER_CONSOLE_BROWSER,
-			$mergedConfig[Configuration::SECTION_CONSOLE][Configuration::PARAMETER_CONSOLE_BROWSER]
-		);
-		$container->setParameter(
-			self::CONTAINER_PARAMETER_CONSOLE_LISTENER_PRIORITY,
-			$mergedConfig[Configuration::SECTION_CONSOLE][Configuration::PARAMETER_CONSOLE_LISTENER_PRIORITY]
-		);
-		$container->setParameter(
-			self::CONTAINER_PARAMETER_CONSOLE_LOG_DIRECTORY,
-			$mergedConfig[Configuration::SECTION_CONSOLE][Configuration::PARAMETER_CONSOLE_LOG_DIRECTORY]
-		);
-		$container->setParameter(
-			self::CONTAINER_PARAMETER_CONTROLLER_LISTENER_PRIORITY,
-			$mergedConfig[Configuration::SECTION_CONTROLLER][Configuration::PARAMETER_CONTROLLER_LISTENER_PRIORITY]
-		);
+        if (
+            ! $this->isEnabled(
+                $mergedConfig[Configuration::SECTION_CONTROLLER][Configuration::PARAMETER_CONTROLLER_ENABLED],
+                $environment,
+                $debug
+            )
+        ) {
+            return;
+        }
 
-		$loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/config'));
-		$loader->load('services.yml');
+        $loader->load('controller_listener.yml');
+    }
 
-		$environment = $container->getParameter('kernel.environment');
-		$debug = $container->getParameter('kernel.debug');
+    /** @param mixed[] $config */
+    public function getConfiguration(array $config, ContainerBuilder $container) : Configuration
+    {
+        return new Configuration(
+            $this->getAlias(),
+            $container->getParameter('kernel.project_dir'),
+            $container->getParameter('kernel.logs_dir'),
+            $container->getParameter('kernel.cache_dir')
+        );
+    }
 
-		if ($this->isEnabled(
-			$mergedConfig[Configuration::SECTION_CONSOLE][Configuration::PARAMETER_CONSOLE_ENABLED],
-			$environment,
-			$debug
-		)) {
-			$loader->load('console_listener.yml');
-		}
-		if ($this->isEnabled(
-			$mergedConfig[Configuration::SECTION_CONTROLLER][Configuration::PARAMETER_CONTROLLER_ENABLED],
-			$environment,
-			$debug
-		)) {
-			$loader->load('controller_listener.yml');
-		}
-	}
+    private function getTemplatesDirectory() : string
+    {
+        $bundleClassReflection = new ReflectionClass(TracyBlueScreenBundle::class);
+        $fileName = $bundleClassReflection->getFileName();
+        assert($fileName !== false);
 
-	/**
-	 * @param mixed[] $config
-	 * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
-	 * @return \VasekPurchart\TracyBlueScreenBundle\DependencyInjection\Configuration
-	 */
-	public function getConfiguration(array $config, ContainerBuilder $container): Configuration
-	{
-		return new Configuration(
-			$this->getAlias(),
-			$container->getParameter('kernel.root_dir'),
-			$container->getParameter('kernel.logs_dir'),
-			$container->getParameter('kernel.cache_dir')
-		);
-	}
+        $srcDirectoryPath = dirname($fileName);
 
-	private function isEnabled(?bool $configOption, string $environment, bool $debug): bool
-	{
-		if ($configOption === null) {
-			return $environment === 'dev' && $debug === true;
-		}
+        return $srcDirectoryPath . '/Resources/views';
+    }
 
-		return $configOption;
-	}
+    private function isEnabled(?bool $configOption, string $environment, bool $debug) : bool
+    {
+        if ($configOption === null) {
+            return $environment === 'dev' && $debug === true;
+        }
 
+        return $configOption;
+    }
 }

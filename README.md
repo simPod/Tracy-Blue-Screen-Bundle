@@ -1,5 +1,8 @@
-Tracy BlueScreen Bundle
-======================
+# Tracy BlueScreen Bundle
+
+[![GitHub Actions][GA master image]][GA master]
+[![Type Coverage][Shepherd Image]][Shepherd Link]
+[![Code Coverage][Coverage image]][CodeCov Master]
 
 **This bundle lets you use the [Tracy's debug screen](https://github.com/nette/tracy#visualization-of-errors-and-exceptions) in combination with the the default profiler in your Symfony application.**
 
@@ -12,7 +15,7 @@ Why is Tracy's debug screen better than the Symfony default exception screen:
 * Fullscreen layout providing more space for information.
 * Look at the interactive [example screen](http://nette.github.io/tracy/tracy-exception.html).
 
-However the Symfony profiler provides a lot of useful information about the application when an error occurs, so it is better to have them both available:
+However, the Symfony profiler provides a lot of useful information about the application when an error occurs, so it is better to have them both available:
 
 ![Nette Tracy with Symfony profiler screenshot](docs/tracy-with-profiler.png)
 
@@ -80,7 +83,7 @@ tracy_blue_screen:
         # Add paths which should be collapsed (for external/compiled code) so that actual error is expanded.
         collapse_paths:
             # Defaults:
-            - '%kernel.root_dir%/bootstrap.php.cache'
+            - '%kernel.project%/bootstrap.php.cache'
             - '%kernel.cache_dir%'
             # plus paths set in BlueScreen instance used (/vendor)
 
@@ -96,16 +99,16 @@ services:
             info:
                 - 'environment: %kernel.environment%'
 
-    vasek_purchart.tracy_blue_screen.tracy.blue_screen: '@my_blue_screen'
+    cdn77.tracy_blue_screen.tracy.blue_screen: '@my_blue_screen'
 ```
 
 Installation
 -----------
 
-Install package [`vasek-purchart/tracy-blue-screen-bundle`](https://packagist.org/packages/vasek-purchart/tracy-blue-screen-bundle) with [Composer](https://getcomposer.org/):
+Install package [`cdn77/tracy-blue-screen-bundle`](https://packagist.org/packages/cdn77/tracy-blue-screen-bundle) with [Composer](https://getcomposer.org/):
 
 ```bash
-composer require vasek-purchart/tracy-blue-screen-bundle
+composer require cdn77/tracy-blue-screen-bundle
 ```
 
 Register the bundle in your application:
@@ -113,6 +116,13 @@ Register the bundle in your application:
 // config/bundles.php
 return [
 	// ...
-	VasekPurchart\TracyBlueScreenBundle\TracyBlueScreenBundle::class => ['all' => true],
+	Cdn77\TracyBlueScreenBundle\TracyBlueScreenBundle::class => ['all' => true],
 ];
 ```
+
+[Coverage image]: https://codecov.io/gh/cdn77/Tracy-Blue-Screen-Bundle/branch/master/graph/badge.svg
+[CodeCov Master]: https://codecov.io/gh/cdn77/Tracy-Blue-Screen-Bundle/branch/master
+[GA master]: https://github.com/cdn77/Tracy-Blue-Screen-Bundle/actions?query=workflow%3A%22CI%22+branch%3Amaster
+[GA master image]: https://github.com/cdn77/Tracy-Blue-Screen-Bundle/workflows/CI/badge.svg
+[Shepherd Image]: https://shepherd.dev/github/cdn77/Tracy-Blue-Screen-Bundle/coverage.svg
+[Shepherd Link]: https://shepherd.dev/github/cdn77/Tracy-Blue-Screen-Bundle

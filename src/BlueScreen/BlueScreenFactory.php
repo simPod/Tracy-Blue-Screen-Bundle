@@ -1,25 +1,22 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
-namespace VasekPurchart\TracyBlueScreenBundle\BlueScreen;
+namespace Cdn77\TracyBlueScreenBundle\BlueScreen;
 
 use Tracy\BlueScreen;
 use Tracy\Debugger;
 
-class BlueScreenFactory
+use function array_merge;
+
+final class BlueScreenFactory
 {
+    /** @param string[] $collapsePaths */
+    public static function create(array $collapsePaths) : BlueScreen
+    {
+        $blueScreen = Debugger::getBlueScreen();
+        $blueScreen->collapsePaths = array_merge($blueScreen->collapsePaths, $collapsePaths);
 
-	/**
-	 * @param string[] $collapsePaths
-	 * @return \Tracy\BlueScreen
-	 */
-	public static function create(array $collapsePaths): BlueScreen
-	{
-		$blueScreen = Debugger::getBlueScreen();
-		$blueScreen->collapsePaths = array_merge($blueScreen->collapsePaths, $collapsePaths);
-
-		return $blueScreen;
-	}
-
+        return $blueScreen;
+    }
 }

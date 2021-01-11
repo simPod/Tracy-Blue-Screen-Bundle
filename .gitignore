@@ -1,3 +1,8 @@
-/bin
+/.phpcs-cache
+/.phpunit.result.cache
 /composer.lock
-/vendor
+/phpcs.xml
+/phpstan.neon
+/psalm.xml
+/phpunit.xml
+/vendor/

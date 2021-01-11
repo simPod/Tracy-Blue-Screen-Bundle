@@ -1,46 +1,44 @@
 {
-	"name": "vasek-purchart/tracy-blue-screen-bundle",
+	"name": "cdn77/tracy-blue-screen-bundle",
 	"description": "This bundle lets you use the Tracy's debug screen in combination with the the default profiler in your Symfony application.",
 	"keywords": ["tracy", "bluescreen", "error", "debug", "debugger", "exceptions", "bundle"],
 	"license": "MIT",
-	"authors": [
-		{
-			"name": "Vašek Purchart",
-			"email": "me@vasekpurchart.cz",
-			"homepage": "http://vasekpurchart.cz"
-		}
-	],
 	"require": {
-		"php": "~7.2",
-		"symfony/config": "~4.0",
-		"symfony/console": "~4.0",
-		"symfony/dependency-injection": "~4.0",
-		"symfony/http-kernel": "~4.0",
-		"symfony/twig-bundle": "~4.0",
-		"symfony/yaml": "~4.0",
-		"tracy/tracy": "~2.4"
+		"php": "^7.3 || ^8.0",
+		"symfony/config": "^5.0",
+		"symfony/console": "^5.0",
+		"symfony/dependency-injection": "^5.0",
+		"symfony/http-kernel": "^5.0",
+		"symfony/twig-bundle": "^5.0",
+		"symfony/yaml": "^5.0",
+		"tracy/tracy": "^2.8"
 	},
 	"require-dev": {
-		"consistence/coding-standard": "3.7",
-		"jakub-onderka/php-console-highlighter": "0.4",
-		"jakub-onderka/php-parallel-lint": "1.0",
-		"matthiasnoback/symfony-dependency-injection-test": "3.1",
-		"mikey179/vfsStream": "1.6.5",
-		"phing/phing": "2.16.1",
-		"phpunit/phpunit": "7.5.1"
+		"cdn77/coding-standard": "^4.0",
+		"matthiasnoback/symfony-dependency-injection-test": "^4.2",
+		"mikey179/vfsstream": "^1.6",
+		"phpstan/extension-installer": "^1.0",
+		"phpstan/phpstan": "^0.12.65",
+		"phpstan/phpstan-phpunit": "0.12.17",
+		"phpstan/phpstan-strict-rules": "^0.12.7",
+		"phpunit/phpunit": "^9.5",
+		"psalm/plugin-phpunit": "^0.15.0",
+		"vimeo/psalm": "^4.3"
 	},
 	"autoload": {
 		"psr-4": {
-			"VasekPurchart\\TracyBlueScreenBundle\\": "src"
-		},
-		"classmap": [ "src" ]
+			"Cdn77\\TracyBlueScreenBundle\\": "src"
+		}
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"VasekPurchart\\TracyBlueScreenBundle\\": "tests"
+			"Cdn77\\TracyBlueScreenBundle\\Tests\\": "tests"
 		}
 	},
 	"config": {
-		"bin-dir": "bin"
+		"sort-packages": true,
+		"platform": {
+			"php": "7.3.0"
+		}
 	}
 }

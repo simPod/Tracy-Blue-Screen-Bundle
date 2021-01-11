@@ -1,16 +1,16 @@
 services:
-    vasek_purchart.tracy_blue_screen.tracy.blue_screen: '@vasek_purchart.tracy_blue_screen.tracy.blue_screen.default'
+    cdn77.tracy_blue_screen.tracy.blue_screen: '@cdn77.tracy_blue_screen.tracy.blue_screen.default'
 
-    vasek_purchart.tracy_blue_screen.tracy.blue_screen.default:
+    cdn77.tracy_blue_screen.tracy.blue_screen.default:
         class: Tracy\BlueScreen
-        factory: [VasekPurchart\TracyBlueScreenBundle\BlueScreen\BlueScreenFactory, create]
+        factory: [Cdn77\TracyBlueScreenBundle\BlueScreen\BlueScreenFactory, create]
         arguments:
-            - '%vasek_purchart.tracy_blue_screen.blue_screen.collapse_paths%'
+            - '%cdn77.tracy_blue_screen.blue_screen.collapse_paths%'
         public: false
 
-    vasek_purchart.tracy_blue_screen.tracy.logger: '@vasek_purchart.tracy_blue_screen.tracy.logger.default'
+    cdn77.tracy_blue_screen.tracy.logger: '@cdn77.tracy_blue_screen.tracy.logger.default'
 
-    vasek_purchart.tracy_blue_screen.tracy.logger.default:
+    cdn77.tracy_blue_screen.tracy.logger.default:
         class: Tracy\Logger
         factory: [Tracy\Debugger, getLogger]
         public: false

@@ -1,10 +1,11 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
-namespace VasekPurchart\TracyBlueScreenBundle;
+namespace Cdn77\TracyBlueScreenBundle;
 
-class TracyBlueScreenBundle extends \Symfony\Component\HttpKernel\Bundle\Bundle
+use Symfony\Component\HttpKernel\Bundle\Bundle;
+
+final class TracyBlueScreenBundle extends Bundle
 {
-
 }
