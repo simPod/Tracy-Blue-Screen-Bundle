@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Cdn77\TracyBlueScreenBundle\BlueScreen;
 
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Throwable;
 use Tracy\BlueScreen;
 
-use function header;
-use function headers_sent;
-use function strpos;
+use function assert;
+use function ob_get_clean;
+use function ob_start;
 
 final class ControllerBlueScreenExceptionListener
 {
@@ -25,27 +25,20 @@ final class ControllerBlueScreenExceptionListener
 
     public function onKernelException(ExceptionEvent $event) : void
     {
-        $this->forceExceptionControllerHtml($event->getRequest());
-        $this->renderBlueScreen($event->getThrowable());
+        $blueScreenResponse = $this->renderBlueScreen($event->getThrowable());
+
+        $event->setResponse($blueScreenResponse);
     }
 
-    private function forceExceptionControllerHtml(Request $request) : void
+    private function renderBlueScreen(Throwable $exception) : Response
     {
-        $request->setRequestFormat('html');
-        $request->attributes->set('_format', 'html');
-    }
-
-    private function renderBlueScreen(Throwable $exception) : void
-    {
-        if (! headers_sent()) {
-            $protocol = $_SERVER['SERVER_PROTOCOL'] ?? 'HTTP/1.1';
-            $code = isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE ') !== false
-                ? 503
-                : 500;
-            header($protocol . ' ' . $code, true, $code);
-            header('Content-Type: text/html; charset=UTF-8');
-        }
+        ob_start();
 
         $this->blueScreen->render($exception);
+
+        $contents = ob_get_clean();
+        assert($contents !== false);
+
+        return new Response($contents, Response::HTTP_NOT_FOUND);
     }
 }
