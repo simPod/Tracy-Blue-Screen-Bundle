@@ -26,7 +26,7 @@ final class TracyBlueScreenExtension extends ConfigurableExtension implements Pr
     public const CONTAINER_PARAMETER_CONSOLE_LISTENER_PRIORITY = 'cdn77.tracy_blue_screen.console.listener_priority';
     public const CONTAINER_PARAMETER_CONSOLE_LOG_DIRECTORY = 'cdn77.tracy_blue_screen.console.log_directory';
     public const CONTAINER_PARAMETER_CONTROLLER_LISTENER_PRIORITY = 'cdn77.tracy_blue_screen.controller.listener_priority';
-    private const TWIG_BUNDLE_ALIAS = 'twig';
+    public const TWIG_BUNDLE_ALIAS = 'twig';
     private const TWIG_TEMPLATES_NAMESPACE = 'Twig';
 
     public function prepend(ContainerBuilder $container) : void
