@@ -28,11 +28,9 @@ To provide the same comfort while using [Symfony Console](http://symfony.com/doc
 Usage
 -----
 
-If you do not have any custom `kernel.exception` listeners this works out of the box. However if you have any, you have to ensure that they do not return any response, because that prevents the profiler from showing up (the same applies for the default Symfony exception screen).
+If you do not have any custom `kernel.exception` listeners this works out of the box. However, if you have any, you have to ensure that they do not return any response, because that prevents the profiler from showing up (the same applies for the default Symfony exception screen).
 
 If you need to change the default position of this listener (see order in `bin/console debug:event-dispatcher`), use the configuration option `listener_priority`.
-
-This bundle expects that you are using the default Symfony profiler screen rendered via the [TwigBundle](http://symfony.com/doc/current/reference/configuration/twig.html), which must be registered.
 
 Console integration also works out of the box, if you do not have an `console.error` listener that would prevent execution of this one. Again, this can be tweaked using the respective `listener_priority` option.
 
