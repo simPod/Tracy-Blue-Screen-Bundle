@@ -112,6 +112,7 @@ final class TracyBlueScreenExtensionTest extends AbstractExtensionTestCase
         $this->loadExtensions();
 
         $this->assertContainerBuilderHasParameter('cdn77.tracy_blue_screen.blue_screen.collapse_paths');
+        /** @var list<string> $collapsePaths */
         $collapsePaths = $this->container->getParameter('cdn77.tracy_blue_screen.blue_screen.collapse_paths');
 
         $this->assertArrayContainsStringPart('/bootstrap.php.cache', $collapsePaths);

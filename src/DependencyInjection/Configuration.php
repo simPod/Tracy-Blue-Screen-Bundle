@@ -30,7 +30,7 @@ final class Configuration implements ConfigurationInterface
     private $alias;
 
     /** @var string */
-    private $kernelRootDir;
+    private $kernelProjectDir;
 
     /** @var string */
     private $kernelLogsDir;
@@ -38,10 +38,10 @@ final class Configuration implements ConfigurationInterface
     /** @var string */
     private $kernelCacheDir;
 
-    public function __construct(string $alias, string $kernelRootDir, string $kernelLogsDir, string $kernelCacheDir)
+    public function __construct(string $alias, string $kernelProjectDir, string $kernelLogsDir, string $kernelCacheDir)
     {
         $this->alias = $alias;
-        $this->kernelRootDir = $kernelRootDir;
+        $this->kernelProjectDir = $kernelProjectDir;
         $this->kernelLogsDir = $kernelLogsDir;
         $this->kernelCacheDir = $kernelCacheDir;
     }
@@ -108,7 +108,7 @@ final class Configuration implements ConfigurationInterface
                             ->prototype('scalar')
                                 ->end()
                             ->defaultValue([
-                                $this->kernelRootDir . '/bootstrap.php.cache',
+                                $this->kernelProjectDir . '/bootstrap.php.cache',
                                 $this->kernelCacheDir,
                             ])
                             ->end()

@@ -15,6 +15,8 @@ use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
 use function assert;
 use function dirname;
+use function is_bool;
+use function is_string;
 
 //phpcs:disable SlevomatCodingStandard.Files.LineLength.LineTooLong
 final class TracyBlueScreenExtension extends ConfigurableExtension implements PrependExtensionInterface
@@ -71,7 +73,9 @@ final class TracyBlueScreenExtension extends ConfigurableExtension implements Pr
         $loader->load('services.yml');
 
         $environment = $container->getParameter('kernel.environment');
+        assert(is_string($environment));
         $debug = $container->getParameter('kernel.debug');
+        assert(is_bool($debug));
 
         if (
             $this->isEnabled(
@@ -99,11 +103,18 @@ final class TracyBlueScreenExtension extends ConfigurableExtension implements Pr
     /** @param mixed[] $config */
     public function getConfiguration(array $config, ContainerBuilder $container) : Configuration
     {
+        $kernelProjectDir = $container->getParameter('kernel.project_dir');
+        $kernelLogsDir = $container->getParameter('kernel.logs_dir');
+        $kernelCacheDir = $container->getParameter('kernel.cache_dir');
+        assert(is_string($kernelProjectDir));
+        assert(is_string($kernelLogsDir));
+        assert(is_string($kernelCacheDir));
+
         return new Configuration(
             $this->getAlias(),
-            $container->getParameter('kernel.project_dir'),
-            $container->getParameter('kernel.logs_dir'),
-            $container->getParameter('kernel.cache_dir')
+            $kernelProjectDir,
+            $kernelLogsDir,
+            $kernelCacheDir
         );
     }
 
