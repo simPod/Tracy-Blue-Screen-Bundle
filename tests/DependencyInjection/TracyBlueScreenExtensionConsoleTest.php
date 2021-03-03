@@ -7,7 +7,6 @@ namespace Cdn77\TracyBlueScreenBundle\Tests\DependencyInjection;
 use Cdn77\TracyBlueScreenBundle\BlueScreen\ConsoleBlueScreenErrorListener;
 use Cdn77\TracyBlueScreenBundle\DependencyInjection\TracyBlueScreenExtension;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
-use Symfony\Bundle\TwigBundle\DependencyInjection\TwigExtension;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
 final class TracyBlueScreenExtensionConsoleTest extends AbstractExtensionTestCase
@@ -21,15 +20,6 @@ final class TracyBlueScreenExtensionConsoleTest extends AbstractExtensionTestCas
         $this->setParameter('kernel.cache_dir', __DIR__ . '/tests-cache-dir');
         $this->setParameter('kernel.environment', 'dev');
         $this->setParameter('kernel.debug', true);
-        $this->setParameter(
-            'kernel.bundles_metadata',
-            [
-                'TwigBundle' => [
-                    'namespace' => 'Symfony\\Bundle\\TwigBundle',
-                    'path' => __DIR__,
-                ],
-            ]
-        );
     }
 
     public function testEnabledByDefault() : void
@@ -162,10 +152,7 @@ final class TracyBlueScreenExtensionConsoleTest extends AbstractExtensionTestCas
     /** @return ExtensionInterface[] */
     protected function getContainerExtensions() : array
     {
-        return [
-            new TracyBlueScreenExtension(),
-            new TwigExtension(),
-        ];
+        return [new TracyBlueScreenExtension()];
     }
 
     /** @param mixed[] $configuration format: extensionAlias(string) => configuration(mixed[]) */

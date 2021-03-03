@@ -4,46 +4,23 @@ declare(strict_types=1);
 
 namespace Cdn77\TracyBlueScreenBundle\DependencyInjection;
 
-use Cdn77\TracyBlueScreenBundle\DependencyInjection\Exception\TwigBundleRequired;
-use Cdn77\TracyBlueScreenBundle\TracyBlueScreenBundle;
-use ReflectionClass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
 use function assert;
-use function dirname;
 use function is_bool;
 use function is_string;
 
 //phpcs:disable SlevomatCodingStandard.Files.LineLength.LineTooLong
-final class TracyBlueScreenExtension extends ConfigurableExtension implements PrependExtensionInterface
+final class TracyBlueScreenExtension extends ConfigurableExtension
 {
     public const CONTAINER_PARAMETER_BLUE_SCREEN_COLLAPSE_PATHS = 'cdn77.tracy_blue_screen.blue_screen.collapse_paths';
     public const CONTAINER_PARAMETER_CONSOLE_BROWSER = 'cdn77.tracy_blue_screen.console.browser';
     public const CONTAINER_PARAMETER_CONSOLE_LISTENER_PRIORITY = 'cdn77.tracy_blue_screen.console.listener_priority';
     public const CONTAINER_PARAMETER_CONSOLE_LOG_DIRECTORY = 'cdn77.tracy_blue_screen.console.log_directory';
     public const CONTAINER_PARAMETER_CONTROLLER_LISTENER_PRIORITY = 'cdn77.tracy_blue_screen.controller.listener_priority';
-    public const TWIG_BUNDLE_ALIAS = 'twig';
-    private const TWIG_TEMPLATES_NAMESPACE = 'Twig';
-
-    public function prepend(ContainerBuilder $container) : void
-    {
-        if (! $container->hasExtension(self::TWIG_BUNDLE_ALIAS)) {
-            throw new TwigBundleRequired();
-        }
-
-        $container->loadFromExtension(
-            self::TWIG_BUNDLE_ALIAS,
-            [
-                'paths' => [
-                    $this->getTemplatesDirectory() => self::TWIG_TEMPLATES_NAMESPACE,
-                ],
-            ]
-        );
-    }
 
     /** @param mixed[] $mergedConfig */
     public function loadInternal(array $mergedConfig, ContainerBuilder $container) : void
@@ -116,17 +93,6 @@ final class TracyBlueScreenExtension extends ConfigurableExtension implements Pr
             $kernelLogsDir,
             $kernelCacheDir
         );
-    }
-
-    private function getTemplatesDirectory() : string
-    {
-        $bundleClassReflection = new ReflectionClass(TracyBlueScreenBundle::class);
-        $fileName = $bundleClassReflection->getFileName();
-        assert($fileName !== false);
-
-        $srcDirectoryPath = dirname($fileName);
-
-        return $srcDirectoryPath . '/Resources/views';
     }
 
     private function isEnabled(?bool $configOption, string $environment, bool $debug) : bool
