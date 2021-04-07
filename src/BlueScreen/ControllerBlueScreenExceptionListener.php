@@ -39,6 +39,6 @@ final class ControllerBlueScreenExceptionListener
         $contents = ob_get_clean();
         assert($contents !== false);
 
-        return new Response($contents, Response::HTTP_NOT_FOUND);
+        return new Response($contents, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }
