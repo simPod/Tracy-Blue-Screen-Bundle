@@ -18,7 +18,7 @@
 		"mikey179/vfsstream": "^1.6",
 		"phpstan/extension-installer": "^1.0",
 		"phpstan/phpstan": "0.12.80",
-		"phpstan/phpstan-phpunit": "0.12.17",
+		"phpstan/phpstan-phpunit": "0.12.18",
 		"phpstan/phpstan-strict-rules": "^0.12.7",
 		"phpunit/phpunit": "^9.5",
 		"psalm/plugin-phpunit": "0.15.1",
