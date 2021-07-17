@@ -13,7 +13,7 @@
 		"tracy/tracy": "^2.8"
 	},
 	"require-dev": {
-		"cdn77/coding-standard": "^4.0",
+		"cdn77/coding-standard": "^5.0",
 		"matthiasnoback/symfony-dependency-injection-test": "^4.2",
 		"mikey179/vfsstream": "^1.6",
 		"phpstan/extension-installer": "^1.0",
