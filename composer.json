@@ -22,7 +22,7 @@
 		"phpstan/phpstan-strict-rules": "^0.12.7",
 		"phpunit/phpunit": "^9.5",
 		"psalm/plugin-phpunit": "0.15.1",
-		"vimeo/psalm": "4.6.2"
+		"vimeo/psalm": "4.8.1"
 	},
 	"autoload": {
 		"psr-4": {
